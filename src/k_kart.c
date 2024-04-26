@@ -3811,7 +3811,7 @@ SINT8 K_GetForwardMove(const player_t *player)
 
 fixed_t K_GetNewSpeed(const player_t *player)
 {
-	const fixed_t accelmax = 4000;
+	const fixed_t accelmax = 1800;
 	fixed_t p_speed = K_GetKartSpeed(player, true, true);
 	fixed_t p_accel = K_GetKartAccel(player);
 
@@ -10386,7 +10386,7 @@ static fixed_t K_GetUnderwaterStrafeMul(const player_t *player)
 
 INT16 K_GetKartTurnValue(const player_t *player, INT16 turnvalue)
 {
-	fixed_t turnfixed = turnvalue * FRACUNIT;
+	fixed_t turnfixed = turnvalue * 1.15 * FRACUNIT;
 
 	fixed_t currentSpeed = 0;
 	fixed_t p_maxspeed = INT32_MAX, p_speed = INT32_MAX;
@@ -11914,6 +11914,13 @@ fixed_t K_PlayerBaseFriction(const player_t *player, fixed_t original)
 	);
 	fixed_t frict = original;
 
+	fixed_t speedPercent = min(FRACUNIT, FixedDiv(player->speed, K_GetKartSpeed(player, false, false)));
+	fixed_t extraFriction = FixedMul(FixedMul(FRACUNIT >> 7, factor), speedPercent);
+
+	// A bit extra friction to help them without drifting.
+	// Remove this line once they can drift.
+	frict -= extraFriction;
+
 	if (player->dashpadcooldown == 0) // attempt to fix Hot Shelter
 	{
 		if (K_PodiumSequence() == true)
@@ -11922,8 +11929,8 @@ fixed_t K_PlayerBaseFriction(const player_t *player, fixed_t original)
 		}
 		else if (K_PlayerUsesBotMovement(player) == true)
 		{
-			const fixed_t speedPercent = min(FRACUNIT, FixedDiv(player->speed, K_GetKartSpeed(player, false, false)));
-			const fixed_t extraFriction = FixedMul(FixedMul(FRACUNIT >> 5, factor), speedPercent);
+			speedPercent = min(FRACUNIT, FixedDiv(player->speed, K_GetKartSpeed(player, false, false)));
+			extraFriction = FixedMul(FixedMul(FRACUNIT >> 5, factor), speedPercent);
 
 			// A bit extra friction to help them without drifting.
 			// Remove this line once they can drift.
@@ -11973,16 +11980,15 @@ void K_AdjustPlayerFriction(player_t *player)
 		player->mo->friction += 1024;
 	}
 
-	/*
+
 	if (K_PlayerEBrake(player) == true)
 	{
-		player->mo->friction -= 1024;
+		player->mo->friction -= 8192;
 	}
 	else if (player->speed > 0 && K_GetForwardMove(player) < 0)
 	{
 		player->mo->friction -= 512;
 	}
-	*/
 
 	// Water gets ice physics too
 	if ((player->mo->eflags & MFE_TOUCHWATER) &&
