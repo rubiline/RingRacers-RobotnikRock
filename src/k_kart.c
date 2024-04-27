@@ -3811,7 +3811,7 @@ SINT8 K_GetForwardMove(const player_t *player)
 
 fixed_t K_GetNewSpeed(const player_t *player)
 {
-	const fixed_t accelmax = 1800;
+	const fixed_t accelmax = 3400;
 	fixed_t p_speed = K_GetKartSpeed(player, true, true);
 	fixed_t p_accel = K_GetKartAccel(player);
 
@@ -10386,7 +10386,7 @@ static fixed_t K_GetUnderwaterStrafeMul(const player_t *player)
 
 INT16 K_GetKartTurnValue(const player_t *player, INT16 turnvalue)
 {
-	fixed_t turnfixed = turnvalue * 1.15 * FRACUNIT;
+	fixed_t turnfixed = turnvalue * FRACUNIT;
 
 	fixed_t currentSpeed = 0;
 	fixed_t p_maxspeed = INT32_MAX, p_speed = INT32_MAX;
