@@ -3817,7 +3817,7 @@ SINT8 K_GetForwardMove(const player_t *player)
 
 fixed_t K_GetNewSpeed(const player_t *player)
 {
-	const fixed_t accelmax = 2800;
+	const fixed_t accelmax = 3200;
 	fixed_t p_speed = K_GetKartSpeed(player, true, true);
 	fixed_t p_accel = K_GetKartAccel(player);
 
@@ -11920,13 +11920,6 @@ fixed_t K_PlayerBaseFriction(const player_t *player, fixed_t original)
 	);
 	fixed_t frict = original;
 
-	fixed_t speedPercent = min(FRACUNIT, FixedDiv(player->speed, K_GetKartSpeed(player, false, false)));
-	fixed_t extraFriction = FixedMul(FixedMul(FRACUNIT >> 8, factor), speedPercent);
-
-	// A bit extra friction to help them without drifting.
-	// Remove this line once they can drift.
-	frict -= extraFriction;
-
 	if (player->dashpadcooldown == 0) // attempt to fix Hot Shelter
 	{
 		if (K_PodiumSequence() == true)
@@ -11935,8 +11928,8 @@ fixed_t K_PlayerBaseFriction(const player_t *player, fixed_t original)
 		}
 		else if (K_PlayerUsesBotMovement(player) == true)
 		{
-			speedPercent = min(FRACUNIT, FixedDiv(player->speed, K_GetKartSpeed(player, false, false)));
-			extraFriction = FixedMul(FixedMul(FRACUNIT >> 5, factor), speedPercent);
+			fixed_t speedPercent = min(FRACUNIT, FixedDiv(player->speed, K_GetKartSpeed(player, false, false)));
+			fixed_t extraFriction = FixedMul(FixedMul(FRACUNIT >> 5, factor), speedPercent);
 
 			// A bit extra friction to help them without drifting.
 			// Remove this line once they can drift.
