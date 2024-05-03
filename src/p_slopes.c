@@ -1145,8 +1145,7 @@ void P_ButteredSlope(mobj_t *mo)
 			return;
 		}
 
-		if (abs(mo->standingslope->zdelta) < FRACUNIT/2
-			&& !(mo->player->rmomx || mo->player->rmomy))
+		if ((abs(mo->standingslope->zdelta) < FRACUNIT/2) && (abs(mo->player->speed) < FRACUNIT))
 		{
 			// Allow the player to stand still on slopes below a certain steepness.
 			// 45 degree angle steep, to be exact.
@@ -1175,7 +1174,7 @@ void P_ButteredSlope(mobj_t *mo)
 		// Easy / Battle: SUPER NERF slope climbs, so that they're usually possible without resources.
 		// (New players suck at budgeting, and may not remember they have spindash / rings at all!)
 		// Special exception for Tutorial because we're trying to teach slope mechanics there.
-		if (K_GetKartGameSpeedScalar(gamespeed) < FRACUNIT && gametype != GT_TUTORIAL)
+		if (true || (K_GetKartGameSpeedScalar(gamespeed) < FRACUNIT && gametype != GT_TUTORIAL))
 		{
 			// Same as above, but use facing angle:
 			angle_t easyangle = mo->angle - mo->standingslope->xydirection;
@@ -1195,7 +1194,7 @@ void P_ButteredSlope(mobj_t *mo)
 				mult = 8 * mult / 5;
 		}
 
-		mult = FRACUNIT + (FRACUNIT + mult)*4/3;
+		mult = FRACUNIT + (FRACUNIT + mult)*5/4;
 		thrust = FixedMul(thrust, mult);
 	}
 
