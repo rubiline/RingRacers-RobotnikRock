@@ -4103,7 +4103,7 @@ void K_SpinPlayer(player_t *player, mobj_t *inflictor, mobj_t *source, INT32 typ
 		S_StartSound(player->mo, sfx_slip);
 	}
 
-	player->spinouttimer = (3*TICRATE/2)+2;
+	player->spinouttimer = (TICRATE*5/4)+1;
 	P_SetPlayerMobjState(player->mo, S_KART_SPINOUT);
 }
 
