@@ -3594,7 +3594,7 @@ fixed_t K_GetKartSpeedFromStat(UINT8 kartspeed)
 {
 	const fixed_t xspd = (3*FRACUNIT)/64;
 	fixed_t g_cc = K_GetKartGameSpeedScalar(gamespeed) + xspd;
-	fixed_t k_speed = 148;
+	fixed_t k_speed = 109;
 	fixed_t finalspeed;
 
 	k_speed += kartspeed*4; // 152 - 184
@@ -3817,7 +3817,7 @@ SINT8 K_GetForwardMove(const player_t *player)
 
 fixed_t K_GetNewSpeed(const player_t *player)
 {
-	const fixed_t accelmax = 3400;
+	const fixed_t accelmax = 2800;
 	fixed_t p_speed = K_GetKartSpeed(player, true, true);
 	fixed_t p_accel = K_GetKartAccel(player);
 
@@ -11921,7 +11921,7 @@ fixed_t K_PlayerBaseFriction(const player_t *player, fixed_t original)
 	fixed_t frict = original;
 
 	fixed_t speedPercent = min(FRACUNIT, FixedDiv(player->speed, K_GetKartSpeed(player, false, false)));
-	fixed_t extraFriction = FixedMul(FixedMul(FRACUNIT >> 7, factor), speedPercent);
+	fixed_t extraFriction = FixedMul(FixedMul(FRACUNIT >> 8, factor), speedPercent);
 
 	// A bit extra friction to help them without drifting.
 	// Remove this line once they can drift.
