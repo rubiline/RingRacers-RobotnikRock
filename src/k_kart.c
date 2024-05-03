@@ -3339,7 +3339,7 @@ INT16 K_GetSpindashChargeTime(const player_t *player)
 {
 	// more charge time for higher speed
 	// Tails = 1.7s, Knuckles = 2.2s, Metal = 2.7s
-	return ((player->kartspeed + 8) * TICRATE) / 8;
+	return ((player->kartspeed + 8) * TICRATE) / 9;
 }
 
 fixed_t K_GetSpindashChargeSpeed(const player_t *player)
