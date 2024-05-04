@@ -2283,11 +2283,11 @@ void G_PlayerReborn(INT32 player, boolean betweenmaps)
 	}
 	else if (G_TimeAttackStart())
 	{
-		rings = 20;
+		rings = RING_MAX;
 	}
 	else if (gametyperules & GTR_CATCHER)
 	{
-		rings = 20;
+		rings = RING_MAX;
 	}
 	else
 	{
@@ -4529,8 +4529,8 @@ static void G_DoCompleted(void)
 				INT32 ringtotal = player->hudrings;
 				if (ringtotal > 0 && grandprixinfo.eventmode != GPEVENT_SPECIAL)
 				{
-					if (ringtotal > 20)
-						ringtotal = 20;
+					if (ringtotal > RING_MAX)
+						ringtotal = RING_MAX;
 					player->totalring += ringtotal;
 					grandprixinfo.rank.rings += ringtotal;
 				}

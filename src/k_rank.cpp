@@ -324,7 +324,7 @@ void gpRank_t::Init(void)
 		totalPoints += grandprixinfo.cup->numlevels * K_CalculateGPRankPoints(i + 1, totalPlayers);
 	}
 
-	totalRings = grandprixinfo.cup->numlevels * numHumans * 20;
+	totalRings = grandprixinfo.cup->numlevels * numHumans * RING_MAX;
 
 	for (i = 0; i < grandprixinfo.cup->numlevels; i++)
 	{
@@ -401,7 +401,7 @@ void gpRank_t::Rejigger(UINT16 removedmap, UINT16 removedgt, UINT16 addedmap, UI
 		}
 		if ((gametypes[removedgt]->rules & GTR_SPHERES) == 0)
 		{
-			deltaRings -= 20 * numPlayers;
+			deltaRings -= RING_MAX * numPlayers;
 		}
 		if (gametypes[removedgt]->rules & GTR_PRISONS)
 		{

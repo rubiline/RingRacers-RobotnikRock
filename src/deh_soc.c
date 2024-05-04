@@ -3206,7 +3206,7 @@ static void readcondition(UINT16 set, UINT32 id, char *word2)
 		ty = UCRP_RINGS + offset;
 		re = get_number(params[1]);
 
-		if (re < -20 || re > 20)
+		if (re < RING_DEATH || re > RING_MAX)
 		{
 			deh_warning("Invalid ring count %d for condition ID %d", re, id+1);
 			return;

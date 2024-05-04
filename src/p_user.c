@@ -458,10 +458,10 @@ INT32 P_GivePlayerRings(player_t *player, INT32 num_rings)
 	}
 
 	test = player->rings + num_rings;
-	if (test > 20) // Caps at 20 rings, sorry!
-		num_rings -= (test-20);
-	else if (test < -20) // Chaotix ring debt!
-		num_rings -= (test+20);
+	if (test > RING_MAX) // Caps at 20 rings, sorry!
+		num_rings -= (test-RING_MAX);
+	else if (test < RING_DEATH) // Chaotix ring debt!
+		num_rings -= (test+RING_DEATH);
 
 	player->rings += num_rings;
 
@@ -1281,14 +1281,14 @@ void P_DoPlayerExit(player_t *player, pflags_t flags)
 		if (!(gametyperules & GTR_SPHERES))
 		{
 			player->hudrings = RINGTOTAL(player);
-			if (player->hudrings > 20)
-				player->hudrings = 20;
+			if (player->hudrings > RING_MAX)
+				player->hudrings = RING_MAX;
 
 			if (grandprixinfo.gp == true
 				&& grandprixinfo.eventmode != GPEVENT_SPECIAL
 				&& player->bot == false && losing == false)
 			{
-				const UINT8 lifethreshold = 20;
+				const UINT8 lifethreshold = RING_MAX;
 
 				const UINT8 oldExtra = player->totalring / lifethreshold;
 				const UINT8 extra = (player->totalring + player->hudrings) / lifethreshold;

@@ -4190,7 +4190,7 @@ boolean P_ProcessSpecial(activator_t *activator, INT16 special, INT32 *args, cha
 					else
 					{
 						// args[2]: cap rings to -20 instead of 0
-						SINT8 baseline = (args[2] ? -20 : 0);
+						SINT8 baseline = (args[2] ? RING_DEATH : 0);
 
 						// Don't push you below baseline
 						if (mo->player->rings <= baseline)

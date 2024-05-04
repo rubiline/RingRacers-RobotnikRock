@@ -3904,12 +3904,12 @@ void K_AwardPlayerRings(player_t *player, UINT16 rings, boolean overload)
 		INT32 totalrings =
 			RINGTOTAL(player) + (player->superring);
 
-		/* capped at 20 rings */
-		if ((totalrings + rings) > 20)
+		/* capped at RINGMAX rings */
+		if ((totalrings + rings) > RING_MAX)
 		{
-			if (totalrings >= 20)
+			if (totalrings >= RING_MAX)
 				return; // woah dont let that go negative buster
-			rings = (20 - totalrings);
+			rings = (RING_MAX - totalrings);
 		}
 	}
 
@@ -4721,13 +4721,14 @@ static void K_HandleTumbleBounce(player_t *player)
 	{
 		if (player->exiting == false && specialstageinfo.valid == true)
 		{
-			// markedfordeath is when player's die at -20 rings
+			// markedfordeath is when player's die at RING_DEATH rings
 			HU_DoTitlecardCEcho(player, "NOT ENOUGH\\RINGS...", false);
 		}
 
 		player->markedfordeath = false;
 		P_StartQuakeFromMobj(5, 64 * player->mo->scale, 4096 * player->mo->scale, player->mo);
-		P_DamageMobj(player->mo, NULL, NULL, 1, DMG_INSTAKILL);
+		// I hate it when girls die
+		//P_DamageMobj(player->mo, NULL, NULL, 1, DMG_INSTAKILL);
 		return;
 	}
 
@@ -4906,9 +4907,9 @@ INT32 K_ExplodePlayer(player_t *player, mobj_t *inflictor, mobj_t *source) // A 
 		player->spinouttimer = FixedMul(player->spinouttimer, spbMultiplier + ((spbMultiplier - FRACUNIT) / 2));
 
 		ringburst = FixedMul(ringburst * FRACUNIT, spbMultiplier) / FRACUNIT;
-		if (ringburst > 20)
+		if (ringburst > RING_MAX)
 		{
-			ringburst = 20;
+			ringburst = RING_MAX;
 		}
 	}
 
@@ -8300,7 +8301,7 @@ static inline BlockItReturn_t PIT_AttractingRings(mobj_t *thing)
 		return BMIT_CONTINUE; // Too far away
 	}
 
-	if (RINGTOTAL(attractmo->player) >= 20 || (attractmo->player->pflags & PF_RINGLOCK))
+	if (RINGTOTAL(attractmo->player) >= RING_MAX || (attractmo->player->pflags & PF_RINGLOCK))
 	{
 		// Already reached max -- just joustle rings around.
 
@@ -8702,10 +8703,10 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 		player->wipeoutslow = 0;
 	}
 
-	if (player->rings > 20)
-		player->rings = 20;
-	else if (player->rings < -20)
-		player->rings = -20;
+	if (player->rings > RING_MAX)
+		player->rings = RING_MAX;
+	else if (player->rings < RING_DEATH)
+		player->rings = RING_DEATH;
 
 	if (cv_kartdebugbotwhip.value)
 	{
@@ -8993,7 +8994,7 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 	if (player->superring)
 	{
 		player->nextringaward++;
-		UINT8 ringrate = 3 - min(2, player->superring / 20); // Used to consume fat stacks of cash faster.
+		UINT8 ringrate = 3 - min(2, player->superring / RING_MAX); // Used to consume fat stacks of cash faster.
 		if (player->nextringaward >= ringrate)
 		{
 			mobj_t *ring = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_RING);
@@ -12346,9 +12347,8 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 			{
 				if ((leveltime%(INSTAWHIP_RINGDRAINEVERY)) == 0 && !(gametyperules & GTR_SPHERES))
 				{
-					if (player->rings > -20 && P_IsDisplayPlayer(player))
+					if (P_IsDisplayPlayer(player))
 						S_StartSound(player->mo, sfx_antiri);
-					player->rings--;
 				}
 			}
 		}
@@ -13139,7 +13139,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 						case KITEM_SUPERRING:
 							if (ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO)
 							{
-								K_AwardPlayerRings(player, 20, true);
+								K_AwardPlayerRings(player, RING_MAX, true);
 								player->itemamount--;
 								player->botvars.itemconfirm = 0;
 							}

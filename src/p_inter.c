@@ -3253,7 +3253,7 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, INT32 da
 				}
 			}
 
-			if (player->rings <= -20)
+			if (player->rings <= RING_DEATH)
 			{
 				player->markedfordeath = true;
 				damagetype = DMG_TUMBLE;
@@ -3509,8 +3509,8 @@ void P_PlayerRingBurst(player_t *player, INT32 num_rings)
 		return;
 
 	// 20 is the maximum number of rings that can be taken from you at once - half the span of your counter
-	if (num_rings > 20)
-		num_rings = 20;
+	if (num_rings > (RING_MAX-RING_DEATH)/2)
+		num_rings = (RING_MAX-RING_DEATH)/2;
 	else if (num_rings <= 0)
 		return;
 

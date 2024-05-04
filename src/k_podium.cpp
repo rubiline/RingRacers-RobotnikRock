@@ -196,7 +196,7 @@ void podiumData_s::Init(void)
 
 				if (lvl->event == GPEVENT_NONE)
 				{
-					dta->rings = M_RandomRange(0, 20);
+					dta->rings = M_RandomRange(0, RING_MAX);
 					rgs += dta->rings;
 
 					dta->lapPoints = M_RandomRange(0, lvl->totalLapPoints);

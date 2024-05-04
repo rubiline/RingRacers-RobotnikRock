@@ -331,6 +331,10 @@ typedef enum
 // QUICKLY GET RING TOTAL, INCLUDING RINGS CURRENTLY IN THE PICKUP ANIMATION
 #define RINGTOTAL(p) (p->rings + p->pickuprings)
 
+#define RING_MAX 20
+#define RING_MIN 0
+#define RING_DEATH 0
+
 // CONSTANTS FOR TRICK PANELS
 #define TRICKMOMZRAMP (30)
 #define TRICKLAG (9)
