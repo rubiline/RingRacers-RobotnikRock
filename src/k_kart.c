@@ -11963,8 +11963,8 @@ fixed_t K_PlayerBaseFriction(const player_t *player, fixed_t original)
 		}
 		else if (K_PlayerUsesBotMovement(player) == true)
 		{
-			fixed_t speedPercent = min(FRACUNIT, FixedDiv(player->speed, K_GetKartSpeed(player, false, false)));
-			fixed_t extraFriction = FixedMul(FixedMul(FRACUNIT >> 5, factor), speedPercent);
+			const fixed_t speedPercent = min(FRACUNIT, FixedDiv(player->speed, K_GetKartSpeed(player, false, false)));
+			const fixed_t extraFriction = FixedMul(FixedMul(FRACUNIT >> 5, factor), speedPercent);
 
 			// A bit extra friction to help them without drifting.
 			// Remove this line once they can drift.
