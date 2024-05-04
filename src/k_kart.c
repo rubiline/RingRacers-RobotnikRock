@@ -3594,7 +3594,7 @@ fixed_t K_GetKartSpeedFromStat(UINT8 kartspeed)
 {
 	const fixed_t xspd = (3*FRACUNIT)/64;
 	fixed_t g_cc = K_GetKartGameSpeedScalar(gamespeed) + xspd;
-	fixed_t k_speed = 109;
+	fixed_t k_speed = 148;
 	fixed_t finalspeed;
 
 	k_speed += kartspeed*4; // 152 - 184
@@ -3817,7 +3817,7 @@ SINT8 K_GetForwardMove(const player_t *player)
 
 fixed_t K_GetNewSpeed(const player_t *player)
 {
-	const fixed_t accelmax = 3200;
+	const fixed_t accelmax = 4000;
 	fixed_t p_speed = K_GetKartSpeed(player, true, true);
 	fixed_t p_accel = K_GetKartAccel(player);
 
@@ -11979,7 +11979,7 @@ void K_AdjustPlayerFriction(player_t *player)
 		player->mo->friction += 1024;
 	}
 
-
+/*
 	if (K_PlayerEBrake(player) == true)
 	{
 		player->mo->friction -= 8192;
@@ -11988,6 +11988,7 @@ void K_AdjustPlayerFriction(player_t *player)
 	{
 		player->mo->friction -= 512;
 	}
+*/
 
 	// Water gets ice physics too
 	if ((player->mo->eflags & MFE_TOUCHWATER) &&
