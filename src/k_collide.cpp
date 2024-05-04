@@ -1101,6 +1101,8 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 	};
 
 	// Cause tumble on invincibility
+	// From Ruby: HUH??? Removing this????????
+	/*
 	auto shouldTumble = [](mobj_t *t1, mobj_t *t2)
 	{
 		return (t1->player->invincibilitytimer > 0);
@@ -1110,6 +1112,7 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 	{
 		return true;
 	}
+	*/
 
 	// Flame Shield dash damage
 	// Bubble Shield blowup damage
@@ -1169,11 +1172,9 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 
 		if (t2->player->rings <= 0 && t2->health == 1) // no bumpers
 		{
-			P_DamageMobj(t2, t1, t1, 1, DMG_STING|DMG_WOMBO);
+			P_DamageMobj(t2, t1, t1, 1, DMG_STING);
 			stung = true;
 		}
-
-		P_PlayerRingBurst(t2->player, 1);
 
 		return stung;
 	};

@@ -848,9 +848,11 @@ static void K_PlayerJustBumped(player_t *player)
 	// friction and gets unset anyway.
 	player->wipeoutslow = wipeoutslowtime+1;
 
+	// RUBY: STOPPPPPP
+	
 	if (player->spinouttimer)
 	{
-		player->spinouttimer = max(wipeoutslowtime+1, player->spinouttimer);
+		player->spinouttimer = min(wipeoutslowtime+1, 1);
 		//player->spinouttype = KSPIN_WIPEOUT; // Enforce type
 	}
 }
