@@ -11428,7 +11428,7 @@ void K_KartEbrakeVisuals(player_t *p)
 	mobj_t *spdl;
 	fixed_t sx, sy;
 
-	if (K_PlayerEBrake(p) == true)
+	if (K_PlayerEBrake(p) == true || p->spindash)
 	{
 		if (p->ebrakefor % 20 == 0)
 		{
@@ -11649,7 +11649,7 @@ static void K_KartSpindash(player_t *player)
 	UINT16 buttons = K_GetKartButtons(player);
 	boolean spawnWind = (leveltime % 2 == 0);
 
-	if (player->mo->hitlag > 0 || P_PlayerInPain(player))
+	if (player->mo->hitlag > 0 || player->nocontrol > 0)
 	{
 		player->spindash = 0;
 	}
@@ -11671,7 +11671,32 @@ static void K_KartSpindash(player_t *player)
 			*/
 
 			// Give a bit of a boost depending on charge.
-			P_InstaThrust(player->mo, player->mo->angle, thrust);
+			if (onGround && player->tumbleBounces <= 0) {
+				// Allows you to use a spindash to leave a pain state.
+				if (P_PlayerInPain(player)) {
+					if (MAXCHARGETIME - player->spindash < 0) {
+						player->wipeoutslow = 0;
+						player->spinouttimer = 0;
+						P_SetPlayerMobjState(player->mo, S_KART_FAST);
+						P_InstaThrust(player->mo, player->mo->angle, thrust*3/2);
+
+						S_ReducedVFXSound(player->mo, sfx_trick1, player);
+					} else {
+						player->nocontrol = TICRATE*3;
+						player->invincibilitytimer = 0;
+
+						if (onGround) {
+							K_SpinPlayer(player, NULL, NULL, KSPIN_SPINOUT);
+						} else {
+							K_StumblePlayer(player);
+						}
+
+						player->invincibilitytimer = 0;
+					}
+				} else {
+					P_InstaThrust(player->mo, player->mo->angle, thrust);
+				}
+			}
 		}
 
 		K_SetTireGrease(player, 2*TICRATE);
@@ -11697,7 +11722,8 @@ static void K_KartSpindash(player_t *player)
 		K_KartSpindashDust(player->mo);
 	}
 
-	if (K_PlayerEBrake(player) == false)
+	// You can pre-buffer a spindash when in pain.
+	if (K_PlayerEBrake(player) == false && !P_PlayerInPain(player))
 	{
 		player->spindash = 0;
 		player->pflags &= ~PF_NOFASTFALL;
@@ -11710,7 +11736,7 @@ static void K_KartSpindash(player_t *player)
 		// This is handled in K_MovePlayerToRespawnPoint.
 		return;
 	}
-	else if (onGround == false)
+	else if (onGround == false && !P_PlayerInPain(player))
 	{
 		if (player->pflags & PF_NOFASTFALL)
 			return;
@@ -11743,7 +11769,7 @@ static void K_KartSpindash(player_t *player)
 		S_ReducedVFXSound(player->mo, sfx_ruburn, player);
 	}
 
-	if (player->speed < 6*player->mo->scale)
+	if (player->speed < 12*player->mo->scale || P_PlayerInPain(player))
 	{
 		if ((buttons & (BT_DRIFT|BT_BRAKE)) == (BT_DRIFT|BT_BRAKE))
 		{
@@ -11795,7 +11821,16 @@ static void K_KartSpindash(player_t *player)
 			}
 			else if (chargetime < -TICRATE)
 			{
-				P_DamageMobj(player->mo, NULL, NULL, 1, DMG_NORMAL);
+				player->nocontrol = TICRATE*2;
+				player->invincibilitytimer = 0;
+
+				if (onGround) {
+					K_SpinPlayer(player, NULL, NULL, KSPIN_SPINOUT);
+				} else {
+					K_StumblePlayer(player);
+				}
+
+				player->invincibilitytimer = 0;
 			}
 		}
 	}
