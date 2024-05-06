@@ -4716,7 +4716,7 @@ void K_BumperInflate(player_t *player)
 static void K_HandleTumbleBounce(player_t *player)
 {
 	player->tumbleBounces++;
-	player->tumbleHeight = (player->tumbleHeight * ((player->tumbleHeight > 100) ? 3 : 4)) / 5;
+	player->tumbleHeight = (player->tumbleHeight * ((player->tumbleHeight > 100) ? 2 : 3)) / 5;
 	player->pflags &= ~PF_TUMBLESOUND;
 
 	if (player->markedfordeath)
